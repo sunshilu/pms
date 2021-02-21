@@ -56,7 +56,8 @@ public class UserController {
 		String code = model.getCode();
 		String password=model.getPassword();
 		String parentCode=model.getParentCode();
-		model.setPassword(MD5.encode(password));
+//		model.setPassword(MD5.encode(password));
+		model.setPassword(password);
 		if (FmtEmpty.isEmpty(userService.selectModel(code))) {
 			if (FmtEmpty.isEmpty(userService.insert(model))) {
 				return "2";
@@ -98,7 +99,8 @@ public class UserController {
 		if (!FmtEmpty.isEmpty(um)) {
 			String password=model.getPassword();
 			if(!password.equals(um.getPassword())) {
-				model.setPassword(MD5.encode(password));
+//				model.setPassword(MD5.encode(password));
+				model.setPassword(password);
 			}
 			return userService.updModel(model) + "";
 		}

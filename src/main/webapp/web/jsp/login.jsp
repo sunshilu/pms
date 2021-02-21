@@ -16,12 +16,12 @@ body {
 </style>
 </head>
 <body>
-	<form action="${pageContext.request.contextPath}/loginAndReg/login" method="post">
+	<form action="${pageContext.request.contextPath}/loginAndReg/login2" method="post">
 		<div class="bg">
 			<div class="wel">系统管理</div>
 			<div class="user">
 				<div id="yonghu" style="">账&nbsp;&nbsp;&nbsp;号</div>
-				<input type="text" name="code" value="u007">
+				<input type="text" name="code" value="u001">
 			</div>
 			<div class="password">
 				<div id="yonghu">密&nbsp;&nbsp;&nbsp;码</div>

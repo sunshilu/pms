@@ -17,27 +17,25 @@
 		id, code, user_code, member_code ,term_code,date
 	</sql>
 	<!-- 模糊查询条件 -->
-<!-- 	<sql id="Where_Like"> -->
-<!-- 		where 1=1 -->
-<!-- 		<if test="code!=null and code!=''">and code like #{code}</if> -->
-<!-- 		<if test="name!=null and name!=''">and name like #{name}</if> -->
-<!-- 		<if test="sum!=null and sum!=''">and sum like #{sum}</if> -->
-<!-- 		<if test="cost!=null and cost!=''">and cost like #{cost}</if> -->
-<!-- 	</sql> -->
+	<sql id="Where_Like">
+		where 1=1
+		<if test="code!=null and code!=''">and code = #{code}</if>
+		<if test="date!=null and date!=''">and date = #{date}</if>
+		<if test="memberCode!=null and memberCode!=''">and member_code = #{memberCode}</if>
+	</sql>
 	<!-- 根据条件模糊查询记录,限制查询的条数 -->
-<!-- 	<select id="selectAll" resultMap="BaseResultMap" parameterType="Object"> -->
-<!-- 		select -->
-<!-- 		<include refid="Base_Column_List" /> -->
-<!-- 		from pms.g_point -->
-<!-- 		<include refid="Where_Like" /> -->
-<!-- 		limit #{rowStart},#{pageLimit} -->
-<!-- 	</select> -->
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from pms.g_point
+		<include refid="Where_Like" />
+	</select>
 	<!-- 	根据条件查询记录条数 -->
-<!-- 	<select id="selectCount" resultType="int" parameterType="Object"> -->
-<!-- 		select count(1) -->
-<!-- 		from pms.g_point -->
-<!-- 		<include refid="Where_Like" /> -->
-<!-- 	</select> -->
+	<select id="selectCount" resultType="int" parameterType="Object">
+		select count(1)
+		from pms.g_point
+		<include refid="Where_Like" />
+	</select>
 	<!-- 根据code查询用户 -->
 	<select id="selectModel" resultMap="BaseResultMap"
 		parameterType="Object">
@@ -48,8 +46,8 @@
 	</select>
 	<insert id="insert" parameterType="Object">
 		insert into
-		pms.g_point(code, user_code, member_code ,term_code,date)
-		values(#{code}, #{userCode},#{memberCode},#{termCode},#{date})
+		pms.g_point(code, user_code, member_code ,term_code,date,grade)
+		values(#{code}, #{userCode},#{memberCode},#{termCode},#{date},#{grade})
 	</insert>
 	<!-- 根据code删除用户 -->
 	<delete id="del" parameterType="Object">
@@ -69,4 +67,12 @@
 <!-- 		set<include refid="Set_Column_List" /> -->
 <!-- 		where code = #{code} -->
 <!-- 	</update> -->
+<!-- 查询匿名者人数，供评分查看，根据条件模糊查询记录,限制查询的条数 -->
+	<select id="getListGroupBYDate" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from pms.g_point
+		<include refid="Where_Like" />
+		group by date
+	</select>
 </mapper>

@@ -108,20 +108,4 @@ public class G_OriginalDataModel {
 				+ member07 + ", member08=" + member08 + ", member09=" + member09 + ", member10=" + member10 + ", grade="
 				+ grade + "]";
 	}
-
-	private G_OriginalDataModel(String member01, String member02, String member03, String member04, String member05,
-			String member06, String member07, String member08, String member09, String member10, String grade) {
-		super();
-		this.member01 = member01;
-		this.member02 = member02;
-		this.member03 = member03;
-		this.member04 = member04;
-		this.member05 = member05;
-		this.member06 = member06;
-		this.member07 = member07;
-		this.member08 = member08;
-		this.member09 = member09;
-		this.member10 = member10;
-		this.grade = grade;
-	}
 }

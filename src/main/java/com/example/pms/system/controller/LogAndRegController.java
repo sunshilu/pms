@@ -80,4 +80,34 @@ public class LogAndRegController {
 		session.removeAttribute("userCode");
 		return "/web/jsp/login";
 	}
+	@RequestMapping("/login2")
+	private String login2(UserModel um,HttpSession session,Model model) {
+		String msg;
+		String view = null;
+		System.out.println(um.getCode());
+		UserModel um1 =userService.selectModel(um.getCode());
+		if (!FmtEmpty.isEmpty(um1)) {
+				if (um1.getPassword().trim().equals(um.getPassword().trim())) {
+					session.setAttribute("currentUser", um1);
+					List<MenuModel> menu=getMenu(um1);
+					model.addAttribute("menu",menu);
+//					List<MenuModel> menus=new ArrayList<>();
+//					MenuModel menu=new MenuModel();
+//					
+//					model.addAttribute("menu",menus);
+					view="/WEB-INF/jsp/main2";
+					msg="登录成功！";
+				}else {
+					view="/web/jsp/failed";
+					msg="密码错误！";
+				}
+				
+		}else {
+			view="/web/jsp/failed";
+			msg="账号不存在";
+		}
+		System.out.println("msg"+msg);
+		model.addAttribute("msg",msg);
+		return view;
+	}
 }

@@ -1,31 +1,14 @@
 package com.example.pms.system.model;
 
-public class G_PointModel {
-	public int id;
-	public String code;
+public class G_PointModel extends BaseModel {
 	public String userCode;
 	public String memberCode;
 	public String termCode;
 	public String date;
+	public String grade;
 	public String field1;
 	public String field2;
 	public String field3;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
 
 	public String getUserCode() {
 		return userCode;
@@ -83,24 +66,18 @@ public class G_PointModel {
 		this.field3 = field3;
 	}
 
-	@Override
-	public String toString() {
-		return "G_PointModel [id=" + id + ", code=" + code + ", userCode=" + userCode + ", memberCode=" + memberCode
-				+ ", termCode=" + termCode + ", date=" + date + ", field1=" + field1 + ", field2=" + field2
-				+ ", field3=" + field3 + "]";
+	public String getGrade() {
+		return grade;
 	}
 
-	public G_PointModel(int id, String code, String userCode, String memberCode, String termCode, String date,
-			String field1, String field2, String field3) {
-		super();
-		this.id = id;
-		this.code = code;
-		this.userCode = userCode;
-		this.memberCode = memberCode;
-		this.termCode = termCode;
-		this.date = date;
-		this.field1 = field1;
-		this.field2 = field2;
-		this.field3 = field3;
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	@Override
+	public String toString() {
+		return "userCode=" + userCode + ", memberCode=" + memberCode
+				+ ", termCode=" + termCode + ", date=" + date + ", field1=" + field1 + ", field2=" + field2
+				+ ", field3=" + field3 + "]";
 	}
 }
