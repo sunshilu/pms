@@ -11,10 +11,12 @@
 		<result column="member_code" property="memberCode" />
 		<result column="term_code" property="termCode" />
 		<result column="date" property="date" />
+		<result column="grade" property="grade" />
+		
 	</resultMap>
 	<!-- 查询字段 -->
 	<sql id="Base_Column_List">
-		id, code, user_code, member_code ,term_code,date
+		id, code, user_code, member_code ,term_code,date,grade
 	</sql>
 	<!-- 模糊查询条件 -->
 	<sql id="Where_Like">
@@ -67,12 +69,20 @@
 <!-- 		set<include refid="Set_Column_List" /> -->
 <!-- 		where code = #{code} -->
 <!-- 	</update> -->
-<!-- 查询匿名者人数，供评分查看，根据条件模糊查询记录,限制查询的条数 -->
+<!-- 根据日期确定匿名者，查询匿名者人数，供评分查看，根据条件模糊查询记录,限制查询的条数 -->
 	<select id="getListGroupBYDate" resultMap="BaseResultMap" parameterType="Object">
 		select
 		<include refid="Base_Column_List" />
 		from pms.g_point
 		<include refid="Where_Like" />
 		group by date
+	</select>
+<!-- 	查询所有打分项 -->
+	<select id="getListGroupBYTerms" resultMap="BaseResultMap" parameterType="Object">
+		select
+		<include refid="Base_Column_List" />
+		from pms.g_point
+		<include refid="Where_Like" />
+		group by term_code
 	</select>
 </mapper>

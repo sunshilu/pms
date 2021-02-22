@@ -21,7 +21,7 @@ body {
 			<div class="wel">系统管理</div>
 			<div class="user">
 				<div id="yonghu" style="">账&nbsp;&nbsp;&nbsp;号</div>
-				<input type="text" name="code" value="u001">
+				<input type="text" name="code" value="孙世禄">
 			</div>
 			<div class="password">
 				<div id="yonghu">密&nbsp;&nbsp;&nbsp;码</div>

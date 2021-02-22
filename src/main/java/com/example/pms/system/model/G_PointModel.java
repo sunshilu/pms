@@ -76,8 +76,9 @@ public class G_PointModel extends BaseModel {
 
 	@Override
 	public String toString() {
-		return "userCode=" + userCode + ", memberCode=" + memberCode
-				+ ", termCode=" + termCode + ", date=" + date + ", field1=" + field1 + ", field2=" + field2
-				+ ", field3=" + field3 + "]";
+		return "G_PointModel [userCode=" + userCode + ", memberCode=" + memberCode + ", termCode=" + termCode
+				+ ", date=" + date + ", grade=" + grade + ", field1=" + field1 + ", field2=" + field2 + ", field3="
+				+ field3 + "]";
 	}
+
 }

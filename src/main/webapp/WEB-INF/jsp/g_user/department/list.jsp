@@ -9,27 +9,28 @@
 <body>
 <div class="layui-collapse">
 		<div class="layui-colla-item">
-			<h2 class="layui-colla-title">个人得分情况</h2>
+			<h2 class="layui-colla-title">部门信息维护</h2>
 			<div class="layui-colla-content layui-show">
 				<fieldset class="layui-elem-field layui-field-title"
 					style="margin-top: 0px; padding: 5px">
-					<legend>得分信息-查询条件</legend>
+					<legend>部门信息-查询条件</legend>
 					<form class="layui-form">
 						<div class="layui-form-item">
-<!-- 							<label class="layui-form-label">商品编号</label> -->
-<!-- 							<div class="layui-input-inline"> -->
-<!-- 								<input type="text" name="code" placeholder="请输入" -->
-<!-- 									autocomplete="off" class="layui-input"> -->
-<!-- 							</div> -->
-							<label class="layui-form-label">姓名</label>
+							<label class="layui-form-label">部门编号</label>
 							<div class="layui-input-inline">
 								<input type="text" name="code" placeholder="请输入"
-									autocomplete="off" class="layui-input" onkeydown="return disableTextSubmit(event)">
+									autocomplete="off" class="layui-input">
+							</div>
+							<label class="layui-form-label">部门名</label>
+							<div class="layui-input-inline">
+								<input type="text" name="name" placeholder="请输入"
+									autocomplete="off" class="layui-input">
 							</div>
 							<label class="layui-form-label"></label> <span> <input
 								type="button" class="layui-btn" lay-submit
 								lay-filter="user_search" value="查询" onclick="refresh()" /> <input type="reset"
-								class="layui-btn" value="重置" /> 
+								class="layui-btn" value="重置" /> <input type="button"
+								class="layui-btn" value="添加" onclick="openUserAdd()" />
 							</span>
 						</div>
 <!-- 						<div class="layui-form-item"> -->
@@ -46,43 +47,45 @@
 	</div>
 	<table id="demo" lay-filter="test"></table>
 	<script type="text/javascript">
-// 	 upload.render({ //允许上传的文件后缀
-// 		    elem: '#upload'
-// 		    ,url: con.app+'/excel/upload'
-// 		    ,accept: 'file' //普通文件
-// 		    ,done: function(res){
-// 		      console.log("34");
-// 		    }
-// 		  });
+	 upload.render({ //允许上传的文件后缀
+		    elem: '#upload'
+		    ,url: con.app+'/excel/upload'
+		    ,accept: 'file' //普通文件
+		    ,done: function(res){
+		      console.log("34");
+		    }
+		  });
 		refresh();
 		function refresh() {
 			 table.render({
 				    elem: '#demo'
-				    ,height: 800
-				    ,url: con.app+'/point/search' //数据接口
-				    ,page: false //开启分页
+				    ,height: 312
+				    ,url: con.app+'/department/search' //数据接口
+				    ,page: true //开启分页
+				    ,limit:5
+				    ,limits:[5,10,15,20,25]
 				    ,request:{
 					    pageName:'pageIndex'
 						    ,limitName:'pageLimit'}
-				    ,where: {code:$("input[name='code']").val()}
+				    ,where: {code:$("input[name='code']").val(),name:$("input[name='name']").val()}
 				    ,cols: [[ //表头
+					    {title:'全选',type:'checkbox',fixed:'left'},
 					    {title:'序号',type:'numbers',fixed:'left'},
-				      {field: 'terms', title: '打分项', fixed: 'left',width:'550'}
-					  ,{field: 'unname01', title: '匿名者1评分',width:'80'} 
-				      ,{field: 'unname02', title: '匿名者2评分',width:'80'}
-				      ,{field: 'unname03', title: '匿名者3评分',width:'80'}
-				      ,{field: 'unname04', title: '匿名者4评分',width:'80'} 
-				      ,{field: 'unname05', title: '匿名者5评分',width:'80'}
-				      ,{field: 'unname06', title: '匿名者6评分',width:'80'}
-				      ,{field: 'unname07', title: '匿名者7评分',width:'80'}
+				      {field: 'id', title: 'ID', sort: true, fixed: 'left'}
+				      ,{field: 'code', title: '部门编号', sort: true}
+				      ,{field: 'name', title: '部门名'}
+				      ,{field: 'description', title: '部门描述'} 
+				      ,{field: 'parentDepart', title: '上级部门'}
+				      ,{field: 'state', title: '部门状态'}
+				      ,{title:'操作1',templet:"#tradd"}
 				    ]]
 				  });
 		}
 		function openUserAdd() {
-			openLayer(con.jsp_url+"/WEB-INF/jsp/business/product/add", refresh)
+			openLayer(con.jsp_url+"/WEB-INF/jsp/g_user/department/add", refresh)
 		}
 		function openUserUpd(code) {
-			openLayer(con.jsp_url+"/WEB-INF/jsp/business/product/upd&code="+ code,
+			openLayer(con.jsp_url+"/WEB-INF/jsp/g_user/department/upd&code="+ code,
 					refresh)
 		}
 		function delUser(code) {
@@ -106,12 +109,7 @@
 		function exportExcel(){
 			window.location.href=con.app+"/excel/export";
 				}
-// 		禁用回车键
-		function disableTextSubmit(e) {
-		    if (e.keyCode == 13) {
-		        return false;
-		    }
-		}
+		
 	</script>
 	<script id="tradd" type="text/html">
     <input type='button' value='修改' class='layui-btn' 

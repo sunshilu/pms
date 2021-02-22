@@ -8,4 +8,6 @@ public interface G_PointMapper<T> extends BaseMapper<T> {
 
 	List<G_PointModel> getListGroupBYDate(G_PointModel pointModel);
 
+	List<G_PointModel> getListGroupBYTerms(G_PointModel pointModel);
+
 }

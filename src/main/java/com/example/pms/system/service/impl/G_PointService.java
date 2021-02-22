@@ -23,4 +23,8 @@ public class G_PointService<T> extends BaseService<T> {
 		return G_PointMapper.getListGroupBYDate(pointModel);
 	}
 
+	public List<G_PointModel> getListGroupBYTerms(G_PointModel pointModel) {
+		return G_PointMapper.getListGroupBYTerms(pointModel);
+	}
+
 }

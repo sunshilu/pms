@@ -39,6 +39,12 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
+				<label class="layui-form-label">所属部门</label>
+				<div class="layui-input-inline">
+					<select name="departmentCode" lay-filter="changeDepartment"></select>
+				</div>
+			</div>
+			<div class="layui-form-item">
 				<label class="layui-form-label">上级人员</label>
 				<div class="layui-input-inline">
 					<select name="parentCode"></select>
@@ -76,6 +82,18 @@
 				form.render();
 			});
 		});
+		});
+	ajax("/department/search", {}, "json", function(d){
+		console.log(d);
+		var html="";
+		$.each(d.data,function(i,dom){
+			html+="<option value='"+dom.code+"'>"+dom.name+"</option>";
+			});
+		$("select[name='departmentCode']").html(html);
+		form.render();
+// 		form.on('select(changeDepartment)', function(c) {
+// 			console.log(c.value); //得到被选中的值
+// 		});
 		});
 		formSubmit('/user/add', 'submit(addUser)', 'text',
 				function(data) {
