@@ -35,8 +35,7 @@
 			<div class="layui-form-item">
 				<label class="layui-form-label">上级部门</label>
 				<div class="layui-input-inline">
-					<input type="text" name="parentDepart" placeholder="请输入"
-						autocomplete="off" class="layui-input">
+					<select name="parentDepart"></select>
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -51,6 +50,15 @@
 	</fieldset>
 	<script type="text/javascript">
 	form.render();
+	ajax("/department/search", {}, "json", function(d){
+		console.log(d);
+		var html="<option value='00'>无</option>";
+		$.each(d.data,function(i,dom){
+			html+="<option value='"+dom.code+"'>"+dom.name+"</option>";
+			});
+		$("select[name='parentDepart']").html(html);
+		form.render();
+		});
 		formSubmit('/department/add', 'submit(addUser)', 'text',
 				function(data) {
 					if (data == 0) {

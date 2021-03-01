@@ -9,6 +9,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	后台管理系统 
+	<div style="height: 400; width: 400">
+		<h1>欢迎进入绩效打分系统</h1>
+	</div>
 </body>
 </html>

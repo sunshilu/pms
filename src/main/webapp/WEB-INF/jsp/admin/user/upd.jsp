@@ -38,6 +38,12 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
+				<label class="layui-form-label">所属部门</label>
+				<div class="layui-input-inline">
+					<select name="departmentCode" lay-filter="changeDepartment"></select>
+				</div>
+			</div>
+			<div class="layui-form-item">
 				<label class="layui-form-label">上级人员</label>
 				<div class="layui-input-inline">
 					<select name="parentCode"></select>
@@ -109,6 +115,15 @@ function init(){
 			}
 		})
 		});
+    ajax("/department/search", {}, "json", function(d){
+    	console.log("department_______");
+    	var html="";
+    	$.each(d.data,function(i,dom){
+    		html+="<option value='"+dom.code+"'>"+dom.name+"</option>";
+    		});
+    	$("select[name='departmentCode']").html(html);
+    	form.render();
+    	});
 		}
 		formSubmit('/user/upd', 'submit(updUser)', 'text',
 				function(data) {

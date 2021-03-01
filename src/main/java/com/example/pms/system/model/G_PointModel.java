@@ -1,14 +1,18 @@
 package com.example.pms.system.model;
 
+import java.util.Date;
+
 public class G_PointModel extends BaseModel {
 	public String userCode;
 	public String memberCode;
 	public String termCode;
-	public String date;
+	public Date date;
 	public String grade;
 	public String field1;
 	public String field2;
 	public String field3;
+	private Date startDate;
+	private Date endDate;
 
 	public String getUserCode() {
 		return userCode;
@@ -34,11 +38,11 @@ public class G_PointModel extends BaseModel {
 		this.termCode = termCode;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
@@ -72,6 +76,22 @@ public class G_PointModel extends BaseModel {
 
 	public void setGrade(String grade) {
 		this.grade = grade;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	@Override

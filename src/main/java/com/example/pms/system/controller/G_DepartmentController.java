@@ -26,11 +26,12 @@ public class G_DepartmentController {
 		String code = model.getCode();
 		String name = model.getName();
 		if (!FmtEmpty.isEmpty(code)) {
-			model.setCode("%" + code + "%");
+			model.setCode(code);
 		}
 		if (!FmtEmpty.isEmpty(name)) {
 			model.setName("%" + name + "%");
 		}
+		model.setState("1");
 		List<G_DepartmentModel> list = departmentService.getList(model);
 		String count = departmentService.getCount(model);
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -47,6 +48,7 @@ public class G_DepartmentController {
 	@RequestMapping(value = "/add", produces = "application/json;charset=utf-8")
 	public String add(G_DepartmentModel model) {
 		String code = model.getCode();
+		model.setState("1");
 		if (FmtEmpty.isEmpty(departmentService.selectModel(code))) {
 			if (FmtEmpty.isEmpty(departmentService.insert(model))) {
 				return "2";

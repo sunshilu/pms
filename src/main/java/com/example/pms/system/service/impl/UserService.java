@@ -26,4 +26,7 @@ public class UserService<T> extends BaseService<T> {
 	public BaseMapper<T> getMapper() {
 		return userMapper;
 	}
+	public List<UserModel> getListNoLimit(UserModel um) {
+		return userMapper.selectAllNoLimit();
+	}
 }

@@ -22,8 +22,10 @@
 	<sql id="Where_Like">
 		where 1=1
 		<if test="code!=null and code!=''">and code = #{code}</if>
-		<if test="date!=null and date!=''">and date = #{date}</if>
+		<if test="date!=null">and date = #{date}</if>
 		<if test="memberCode!=null and memberCode!=''">and member_code = #{memberCode}</if>
+		<if test="startDate!=null">and date <![CDATA[ >= ]]> #{startDate}</if>
+		<if test="endDate!=null">and date <![CDATA[ <= ]]> #{endDate}</if>
 	</sql>
 	<!-- 根据条件模糊查询记录,限制查询的条数 -->
 	<select id="selectAll" resultMap="BaseResultMap" parameterType="Object">
@@ -48,8 +50,8 @@
 	</select>
 	<insert id="insert" parameterType="Object">
 		insert into
-		pms.g_point(code, user_code, member_code ,term_code,date,grade)
-		values(#{code}, #{userCode},#{memberCode},#{termCode},#{date},#{grade})
+		pms.g_point(code, user_code, member_code ,term_code,date,grade,field1)
+		values(#{code}, #{userCode},#{memberCode},#{termCode},#{date},#{grade},#{field1})
 	</insert>
 	<!-- 根据code删除用户 -->
 	<delete id="del" parameterType="Object">
@@ -73,7 +75,7 @@
 	<select id="getListGroupBYDate" resultMap="BaseResultMap" parameterType="Object">
 		select
 		<include refid="Base_Column_List" />
-		from pms.g_point
+		from pms.g_point 
 		<include refid="Where_Like" />
 		group by date
 	</select>

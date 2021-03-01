@@ -22,6 +22,7 @@ public class G_DepartmentModel {
 	private int rowCount;// limit 参数
 	private boolean pageOn = false;// 是否分页
 	private String orderby;
+	private String parentName;
 
 	public Integer getId() {
 		return id;
@@ -189,6 +190,14 @@ public class G_DepartmentModel {
 
 	public void setOrderby(String orderby) {
 		this.orderby = orderby;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
 	}
 
 	@Override

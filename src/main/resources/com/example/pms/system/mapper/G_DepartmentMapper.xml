@@ -11,6 +11,7 @@
 		<result column="description" property="description" />
 		<result column="parent_depart" property="parentDepart" />
 		<result column="state" property="state" />
+		<result column="parent_name" property="parentName" />
 	</resultMap>
 	<!-- 查询字段 -->
 	<sql id="Base_Column_List">
@@ -29,7 +30,8 @@
 	<select id="selectAll" resultMap="BaseResultMap" parameterType="Object">
 		select
 		<include refid="Base_Column_List" />
-		from pms.g_department
+		,(select name from pms.g_department where code=d.parent_depart) parent_name
+		from pms.g_department d
 		<include refid="Where_Like" />
 		limit #{rowStart},#{pageLimit}
 	</select>

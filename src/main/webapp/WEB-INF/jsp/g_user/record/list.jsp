@@ -9,21 +9,31 @@
 <body>
 <div class="layui-collapse">
 		<div class="layui-colla-item">
-			<h2 class="layui-colla-title">用户信息维护</h2>
+			<h2 class="layui-colla-title"></h2>
 			<div class="layui-colla-content layui-show">
 				<fieldset class="layui-elem-field layui-field-title"
 					style="margin-top: 0px; padding: 5px">
-					<legend>用户信息-查询条件</legend>
+					<legend>往期打分信息-查询条件</legend>
 					<form class="layui-form">
 						<div class="layui-form-item">
-							<label class="layui-form-label">账号</label>
+							<label class="layui-form-label">打分编号</label>
 							<div class="layui-input-inline">
-								<input type="text" name="code" placeholder="请输入账号"
+								<input type="text" name="code" placeholder="请输入"
 									autocomplete="off" class="layui-input">
 							</div>
-							<label class="layui-form-label">用户名</label>
+							<label class="layui-form-label">打分名</label>
 							<div class="layui-input-inline">
-								<input type="text" name="name" placeholder="请输入姓名"
+								<input type="text" name="name" placeholder="请输入"
+									autocomplete="off" class="layui-input">
+							</div>
+							<label class="layui-form-label">打分次数</label>
+							<div class="layui-input-inline">
+								<input type="text" name="pointMarkTime" placeholder="请输入"
+									autocomplete="off" class="layui-input">
+							</div>
+							<label class="layui-form-label">打分时间的</label>
+							<div class="layui-input-inline">
+								<input type="text" name="timeQuantum" placeholder="请输入"
 									autocomplete="off" class="layui-input">
 							</div>
 							<label class="layui-form-label"></label> <span> <input
@@ -59,38 +69,37 @@
 		function refresh() {
 			 table.render({
 				    elem: '#demo'
-				    ,height: 550
-				    ,url: con.app+'/user/search' //数据接口
+				    ,height: 312
+				    ,url: con.app+'/product/search' //数据接口
 				    ,page: true //开启分页
-				    ,limit:10
-				    ,limits:[10,20,30,40,50]
+				    ,limit:5
+				    ,limits:[5,10,15,20,25]
 				    ,request:{
 					    pageName:'pageIndex'
 						    ,limitName:'pageLimit'}
 				    ,where: {code:$("input[name='code']").val(),name:$("input[name='name']").val()}
 				    ,cols: [[ //表头
 					    {title:'全选',type:'checkbox',fixed:'left'},
-					    {title:'序号',type:'numbers',fixed:'left'}
-				      ,{field: 'code', title: '用户编号'}
-				      ,{field: 'name', title: '姓名', sort: true}
-				      ,{field: 'password', title: '密码'} 
-				      ,{field: 'roleCode', title: '角色'}
-				      ,{field: 'parentName', title: '上级人员', sort: true}
-				      ,{field: 'parentDepartmentName', title: '上级部门', sort: true}
+					    {title:'序号',type:'numbers',fixed:'left'},
+				      {field: 'id', title: 'ID', sort: true, fixed: 'left'}
+				      ,{field: 'code', title: '商品编号', sort: true}
+				      ,{field: 'name', title: '商品名'}
+				      ,{field: 'sum', title: '数量'} 
+				      ,{field: 'cost', title: '价格'}
 				      ,{title:'操作1',templet:"#tradd"}
 				    ]]
 				  });
 		}
 		function openUserAdd() {
-			openLayer(con.jsp_url+"/WEB-INF/jsp/admin/user/add", refresh)
+			openLayer(con.jsp_url+"/WEB-INF/jsp/business/product/add", refresh)
 		}
 		function openUserUpd(code) {
-			openLayer(con.jsp_url+"/WEB-INF/jsp/admin/user/upd&code="+ code,
+			openLayer(con.jsp_url+"/WEB-INF/jsp/business/product/upd&code="+ code,
 					refresh)
 		}
 		function delUser(code) {
 			openConfirm(function(index) {
-				ajax('/user/del', {
+				ajax('/product/del', {
 					code : code
 				}, 'text', function(data) {
 					console.log(data);
@@ -107,9 +116,7 @@
 			})
 		}
 		function exportExcel(){
-// 			window.location.href=con.app+"/user/export";
-			ajax("/user/export", {code:$("input[name='code']").val(),name:$("input[name='name']").val()}, "text", function(){
-				console.log("1")});
+			window.location.href=con.app+"/excel/export";
 				}
 		
 	</script>

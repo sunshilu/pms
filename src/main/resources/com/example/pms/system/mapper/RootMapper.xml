@@ -43,7 +43,6 @@
 		,(select parent_code from pms.menu where code=r.menu_code) menu_parent_code
 		from pms.root r
 		<include refid="Where_Like" />
-		limit #{rowStart},#{pageLimit}
 	</select>
 	<!-- 根据id查询用户 -->
 	<select id="selectModel" resultMap="BaseResultMap"

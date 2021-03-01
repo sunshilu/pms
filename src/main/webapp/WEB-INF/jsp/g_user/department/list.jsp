@@ -16,11 +16,11 @@
 					<legend>部门信息-查询条件</legend>
 					<form class="layui-form">
 						<div class="layui-form-item">
-							<label class="layui-form-label">部门编号</label>
-							<div class="layui-input-inline">
-								<input type="text" name="code" placeholder="请输入"
-									autocomplete="off" class="layui-input">
-							</div>
+<!-- 							<label class="layui-form-label">部门编号</label> -->
+<!-- 							<div class="layui-input-inline"> -->
+<!-- 								<input type="text" name="code" placeholder="请输入" -->
+<!-- 									autocomplete="off" class="layui-input"> -->
+<!-- 							</div> -->
 							<label class="layui-form-label">部门名</label>
 							<div class="layui-input-inline">
 								<input type="text" name="name" placeholder="请输入"
@@ -59,11 +59,11 @@
 		function refresh() {
 			 table.render({
 				    elem: '#demo'
-				    ,height: 312
+				    ,height: 550
 				    ,url: con.app+'/department/search' //数据接口
 				    ,page: true //开启分页
-				    ,limit:5
-				    ,limits:[5,10,15,20,25]
+				    ,limit:10
+				    ,limits:[10,20,30,40,50]
 				    ,request:{
 					    pageName:'pageIndex'
 						    ,limitName:'pageLimit'}
@@ -75,7 +75,7 @@
 				      ,{field: 'code', title: '部门编号', sort: true}
 				      ,{field: 'name', title: '部门名'}
 				      ,{field: 'description', title: '部门描述'} 
-				      ,{field: 'parentDepart', title: '上级部门'}
+				      ,{field: 'parentName', title: '上级部门', sort: true}
 				      ,{field: 'state', title: '部门状态'}
 				      ,{title:'操作1',templet:"#tradd"}
 				    ]]

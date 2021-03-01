@@ -2,10 +2,14 @@ package com.example.pms.system.controller;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -16,10 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.pms.system.model.G_DepartmentModel;
 import com.example.pms.system.model.G_OriginalDataModel;
 import com.example.pms.system.model.G_PointModel;
+import com.example.pms.system.model.G_PointRecordModel;
 import com.example.pms.system.model.G_ReturnDataModel;
 import com.example.pms.system.model.UserModel;
+import com.example.pms.system.service.impl.G_DepartmentService;
 import com.example.pms.system.service.impl.G_PointService;
 import com.example.pms.system.service.impl.UserService;
 import com.example.pms.util.FmtEmpty;
@@ -32,29 +39,51 @@ public class G_PointController {
 	private G_PointService<G_PointModel> G_PointService;
 	@Autowired
 	private UserService<UserModel> userService;
+	@Autowired
+	private G_DepartmentService<G_DepartmentModel> G_DepartmentService;
+	
+//	@Autowired
+//	private G_PointRecordService<G_PointRecordModel> G_PointRecordService;
+	
 
 	@ResponseBody
 	@RequestMapping(value = "/search", produces = "application/json;charset=utf-8")
-	public String search(UserModel model, HttpSession session) {
-		UserModel um1 = (UserModel) session.getAttribute("currentUser");
-		String currentUser = um1.getCode();
+	public String search(UserModel model, HttpSession session) throws Exception {
+		System.out.println(model);
+		UserModel currentUser = (UserModel) session.getAttribute("currentUser");
+		String currentUserCode = currentUser.getCode();
 		String code = model.getCode();
-		G_PointModel pointModel = new G_PointModel();
 		if (FmtEmpty.isEmpty(code) || ("").equals(code)) {
-			code = currentUser;
+			code = currentUserCode;
+			model = currentUser;
 		}
-		pointModel.setMemberCode(code);
-//		List<G_PointModel> list = G_PointService.getList(pointModel);// 所有被查询人的得分记录
-		String count = G_PointService.getCount(pointModel);// 被查询人的得分记录条数
-		List<G_PointModel> unnames = G_PointService.getListGroupBYDate(pointModel);// 所有评分人
 
+//		Calendar c = Calendar.getInstance();
+//		c.set(Calendar.DAY_OF_MONTH, 1);
+//		Date startDate = c.getTime();
+//		c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+//		Date endDate = c.getTime();
+
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 注意月份是MM
+//		System.out.println(model.getStartDate());
+//		if (model.getStartDate() != null && !"".equals(model.getStartDate())) {
+//			startDate = parse(model.getStartDate(), "EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+//			System.out.println("model-startDate:_________" + startDate);
+//		}
+//		if (model.getEndDate() != null && !"".equals(model.getEndDate())) {
+//			endDate = parse(model.getEndDate(), "EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+//		}
+//		System.out.println("startDate:_________" + startDate);
+//		System.out.println("endDate__________" + endDate);
+		G_PointModel pointModel = new G_PointModel();
+		pointModel.setMemberCode(code);
+//		pointModel.setStartDate(startDate);
+//		pointModel.setEndDate(endDate);
+		List<G_PointModel> unnames = G_PointService.getListGroupBYDate(pointModel);// 按打分日期分组，找出 所有匿名评分人
 		// 按评分人将被查分人的得分记录，分组
 		Map<String, List<G_PointModel>> groupMap = new HashMap<>();
 		int n = 1;
-		List<String> unnamesList = new ArrayList<>();
 		for (G_PointModel unname : unnames) {
-//			取出日期，放进集合方便以后使用
-			unnamesList.add(unname.getDate());
 			G_PointModel pointModel2 = new G_PointModel();
 			pointModel2.setMemberCode(code);
 			pointModel2.setDate(unname.getDate());
@@ -63,16 +92,10 @@ public class G_PointController {
 			n++;
 
 		}
-		System.out.println(groupMap.get("un1"));
-		System.out.println(groupMap.get("un2"));
-		System.out.println(groupMap.get("un3"));
-		System.out.println(groupMap.get("un4"));
-		System.out.println(groupMap.get("un5"));
-
 		G_PointModel pointModel3 = new G_PointModel();
 		List<G_PointModel> list3 = G_PointService.getListGroupBYTerms(pointModel3);
 		List<G_ReturnDataModel> list = new ArrayList<>();
-		/** 动态加载类 **/
+		/** 动态拼接类属性 **/
 		Class clazz;
 		try {
 			int h;
@@ -83,7 +106,6 @@ public class G_PointController {
 				Field[] fields = clazz.getDeclaredFields();
 				returnModel.setTerms(list3.get(i).getTermCode());
 				for (int j = 0; j < unnames.size(); j++) {
-//					returnModel.setUnname01(unnamesList.get(i));
 					Field field = fields[j + 1];
 					/** 先获取变量名 **/
 					String fieldName = field.getName();
@@ -104,9 +126,6 @@ public class G_PointController {
 				}
 				list.add(returnModel);
 			}
-			for (G_ReturnDataModel rdm : list) {
-				System.out.println("rdm:" + rdm);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -114,7 +133,7 @@ public class G_PointController {
 		map.put("data", list);
 		map.put("code", 0);
 		map.put("msg", "");
-		map.put("count", count);
+		map.put("count", "0");
 		System.out.println(map);
 		return new JSONObject(map).toString();
 
@@ -141,14 +160,15 @@ public class G_PointController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/test", produces = "application/json;charset=utf-8")
-	public void test() {
-	}
-
-	@ResponseBody
 	@RequestMapping(value = "/add", produces = "application/json;charset=utf-8")
 	public String add(G_OriginalDataModel model, HttpSession session) {
-		session.getAttribute("userCode");
+		UserModel um1 = (UserModel) session.getAttribute("currentUser");
+		if (um1.getDepartmentCode().equals("d001")) {
+			return "2";
+		}
+		if ("0".equals(um1.getMarkState())) {
+			return "0";
+		}
 		List<String> list = reflect(model);
 		String grade = model.getGrade();
 		grade.trim(); // 去掉首尾空格
@@ -180,7 +200,9 @@ public class G_PointController {
 		terms.add("7、在承担工作上有发展潜力");
 
 		int i = 0;
-		g_PointModel.setDate(new Date().toString());
+		g_PointModel.setDate(new Date());
+		g_PointModel.setField1((Integer.parseInt(um1.getMarkTime()) + 1) + "");// 第n次绩效打分，对应用户的打分次数
+		g_PointModel.setUserCode(um1.getCode());
 		for (String term : terms) {
 			g_PointModel.setTermCode(term);
 			for (String p : list) {
@@ -192,8 +214,12 @@ public class G_PointController {
 				i++;
 			}
 		}
+		um1.setMarkState("0");
+		um1.setMarkTime((Integer.parseInt(um1.getMarkTime()) + 1) + "");
+		userService.updModel(um1);
 		return "1";
 	}
+
 //	@ResponseBody
 //	@RequestMapping("/del")
 //	public String del(String code){
@@ -217,5 +243,202 @@ public class G_PointController {
 //		}
 //		return "0";
 //	}
+	@ResponseBody
+	@RequestMapping(value = "/searchDepartmentCondition", produces = "application/json;charset=utf-8")
+	public String search2(G_DepartmentModel model, HttpSession session) {
+		List<G_DepartmentModel> departments = G_DepartmentService.getList(model);// 查询的部门
+		UserModel um1 = new UserModel();
 
+		Map<String, Object> map = new HashMap<String, Object>();// 要返回的数据
+		if (FmtEmpty.isEmpty(model.getName()) || ("").equals(model.getName())) {
+			UserModel currentUser = (UserModel) session.getAttribute("currentUser");
+			model = G_DepartmentService.selectModel(currentUser.getDepartmentCode());// 登录用户的部门
+			if (model.getParentDepart().equals("00")) {
+				map.put("data", new ArrayList<>());
+				map.put("code", 0);
+				map.put("msg", "用户不参与评分，请手动查询部门评分");
+				map.put("count", "0");
+				System.out.println(map);
+				return new JSONObject(map).toString();
+			}
+			um1.setDepartmentCode(model.getCode());
+		} else {
+
+			um1.setDepartmentCode(departments.get(0).getCode());
+		}
+		um1.setState(1);
+		List<UserModel> members = userService.getList(um1);
+		G_PointModel pm1 = new G_PointModel();
+		int sum;
+		Integer total = 0;
+		Map<String, String> user_grade = new HashMap<>();
+		List<G_ReturnDataModel> returnList = new ArrayList<>();
+		// 部门下没有成员时处理
+		if (members.size() < 1) {
+			map.put("data", new ArrayList<>());
+			map.put("code", 0);
+			map.put("msg", "该部门下没有部员，无法查分");
+			map.put("count", "0");
+			System.out.println(map);
+			return new JSONObject(map).toString();
+		}
+		for (UserModel um : members) {
+//			System.out.println(um);
+//			验证是否部门内所有成员都已评分，方可进行查看
+			if ("1".equals(um.getMarkState())) {
+				map.put("data", new ArrayList<>());
+				map.put("code", 0);
+				map.put("msg", "评分未完成，待所有人评分完毕后，方可查看");
+				map.put("count", "0");
+				System.out.println(map);
+				return new JSONObject(map).toString();
+			}
+			sum = 0;
+			pm1.setMemberCode(um.getCode());
+			List<G_PointModel> list = G_PointService.getList(pm1);
+			for (G_PointModel pm : list) {
+				sum += Integer.valueOf(pm.getGrade()).intValue();
+				total += Integer.valueOf(pm.getGrade()).intValue();
+			}
+			user_grade.put(um.getCode(), sum + "");
+
+		}
+		// 计算每一分的权重
+		int a = 700 * members.size();
+		int b = total;
+		// 部门总分为0，说明本部门未评分或不进行评分，处理
+		if (total == 0) {
+			map.put("data", new ArrayList<>());
+			map.put("code", 0);
+			map.put("msg", "本部门未评分或不进行评分，无法查分");
+			map.put("count", "0");
+			System.out.println(map);
+			return new JSONObject(map).toString();
+		}
+		DecimalFormat df = new DecimalFormat("0.00");// 格式化小数
+		String rate = df.format((float) a / b);// 返回的是String类型
+
+		/** 动态加载类 **/
+		Class clazz;
+		try {
+			G_ReturnDataModel rdm = new G_ReturnDataModel();
+			clazz = rdm.getClass();
+			Field[] fields = clazz.getDeclaredFields();
+			rdm.setTerms("<h4 style='text-align:center;font-size:30px'>部员</h4>");
+			for (int i = 0; i < members.size(); i++) {
+				Field field = fields[i + 1];
+				String fieldName = field.getName();
+				String setMethod = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+				@SuppressWarnings("unchecked")
+				Method curMethod = clazz.getMethod(setMethod, String.class);
+				curMethod.invoke(rdm, members.get(i).getCode());// curVO实体对象、value：set的参数值
+
+			}
+			rdm.setTotal("部门总计");
+			rdm.setRate("分值权重");
+			returnList.add(rdm);
+
+			G_ReturnDataModel rdm2 = new G_ReturnDataModel();
+			clazz = rdm2.getClass();
+			Field[] fields2 = clazz.getDeclaredFields();
+			rdm2.setTerms("<h4 style='text-align:center;font-size:30px'>得分</h4>");
+			for (int i = 0; i < members.size(); i++) {
+				Field field = fields2[i + 1];
+				String fieldName = field.getName();
+				String setMethod = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+				@SuppressWarnings("unchecked")
+				Method curMethod = clazz.getMethod(setMethod, String.class);
+				curMethod.invoke(rdm2, user_grade.get(members.get(i).getCode()).toString());// curVO实体对象、value：set的参数值
+
+			}
+
+			rdm2.setTotal(total.toString() + "分");
+			rdm2.setRate(rate + "元/分（每得1分获得" + rate + "元）");
+			returnList.add(rdm2);
+
+			// 计算绩效
+			for (UserModel um : members) {
+				BigDecimal a1 = new BigDecimal(700 * members.size());
+				BigDecimal b1 = new BigDecimal(total);
+				BigDecimal num1 = new BigDecimal(user_grade.get(um.getCode()));
+				BigDecimal num2 = a1.divide(b1, 20, BigDecimal.ROUND_HALF_UP);
+				BigDecimal result = num1.multiply(num2);
+				DecimalFormat df1 = new DecimalFormat("0.00");// 格式化小数
+				String performance = df1.format(result);// 返回的是String类型
+				user_grade.put(um.getCode(), performance);
+			}
+
+			G_ReturnDataModel rdm3 = new G_ReturnDataModel();
+			clazz = rdm3.getClass();
+			Field[] fields3 = clazz.getDeclaredFields();
+			rdm3.setTerms("<h4 style='text-align:center;font-size:30px'>绩效工资</h4>");
+			for (int i = 0; i < members.size(); i++) {
+				Field field = fields3[i + 1];
+				String fieldName = field.getName();
+				String setMethod = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+				@SuppressWarnings("unchecked")
+				Method curMethod = clazz.getMethod(setMethod, String.class);
+				curMethod.invoke(rdm3, user_grade.get(members.get(i).getCode()).toString());// curVO实体对象、value：set的参数值
+
+			}
+
+			rdm3.setTotal(a + "元");
+			rdm3.setRate(rate + "元/分（每得1分获得" + rate + "元）");
+			returnList.add(rdm3);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		map.put("data", returnList);
+		map.put("code", 0);
+		map.put("msg", "1");
+		map.put("count", "0");
+		System.out.println(map);
+		return new JSONObject(map).toString();
+
+	}
+
+//	开启打分通道，将要打分的用户markState设置为1；
+	@ResponseBody
+	@RequestMapping("/open")
+	private String open(G_DepartmentModel department) {
+		UserModel um1 = new UserModel();
+		um1.setDepartmentCode(department.getCode());
+		List<UserModel> list = userService.getListNoLimit(um1);
+		String markTime;
+		if (list.size() != 0) {
+			markTime = list.get(0).getMarkTime();
+//			markTime = (Integer.parseInt(markTime) + 1) + "";
+		} else {
+			return "2";
+		}
+		for (UserModel um : list) {
+			if (!"d001".equals(um.getDepartmentCode()) && um.getDepartmentCode() != null) {
+				um.setMarkState("1");
+				if (!"1".equals(userService.updModel(um))) {
+					return "0";
+				}
+			}
+		}
+//		G_PointRecordModel rm = new G_PointRecordModel();
+//		rm.setCode(department.getCode() + markTime);
+//		rm.setName(department.getCode() + "第"+markTime+"次打分");
+//		rm.setPointMarkTime(markTime);
+//		rm.setState(1);
+//		rm.setTimeQuantum(new Date().toString());
+//		rm.setDepartmentCode(department.getCode());
+//		
+		return "1";
+	}
+
+	public static Date parse(String str, String pattern, Locale locale) {
+		if (str == null || pattern == null) {
+			return null;
+		}
+		try {
+			return new SimpleDateFormat(pattern, locale).parse(str);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

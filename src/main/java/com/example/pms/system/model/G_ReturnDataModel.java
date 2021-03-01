@@ -9,6 +9,8 @@ public class G_ReturnDataModel {
 	private String unname05;
 	private String unname06;
 	private String unname07;
+	private String total;
+	private String rate;
 
 	public String getTerms() {
 		return terms;
@@ -74,10 +76,27 @@ public class G_ReturnDataModel {
 		this.unname07 = unname07;
 	}
 
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
+	}
+
+	public String getRate() {
+		return rate;
+	}
+
+	public void setRate(String rate) {
+		this.rate = rate;
+	}
+
 	@Override
 	public String toString() {
 		return "G_ReturnDataModel [terms=" + terms + ", unname01=" + unname01 + ", unname02=" + unname02 + ", unname03="
 				+ unname03 + ", unname04=" + unname04 + ", unname05=" + unname05 + ", unname06=" + unname06
-				+ ", unname07=" + unname07 + "]";
+				+ ", unname07=" + unname07 + ", total=" + total + ", rate=" + rate + "]";
 	}
+
 }
